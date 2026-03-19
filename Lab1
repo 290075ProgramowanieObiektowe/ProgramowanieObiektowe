@@ -1,0 +1,165 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+const int MAX = 10;
+
+string dodajOsobe(string *tabNazwisk, bool *tabObecnosc, string *tabIndeks, string nazwisko) {
+    for(int i = 0; i < MAX; i++) {
+        if(tabNazwisk[i] == "") {
+            tabNazwisk[i] = nazwisko;
+            tabObecnosc[i] = false;
+            tabIndeks[i] = "---";
+
+            return "Dodano studenta: " + nazwisko;
+        }
+    }
+    return "Blad: brak miejsca";
+}
+
+bool dodajObecnosc(string *tabNazwisk, bool *tabObecnosc, string nazwisko) {
+    for(int i = 0; i < MAX; i++) {
+        if(tabNazwisk[i] == nazwisko) {
+
+
+            tabObecnosc[i] = !tabObecnosc[i];
+
+            return true;
+        }
+    }
+    return false;
+}
+
+void Pokaz(string *tabNazwisk, bool *tabObecnosc, string *tabIndeks) {
+    cout << "\n" << left << setw(7) << "ID" << " | " << setw(10) << "NAZWISKO" << " | STATUS" << endl;
+    cout  << endl;
+    for(int i = 0; i < MAX; i++) {
+        if(tabNazwisk[i] != "") {
+            cout << left << setw(7) << tabIndeks[i] << " | " 
+
+                 << setw(10) << tabNazwisk[i] << " | " 
+
+                 << (tabObecnosc[i] ? "OBECNY" : "NIEOBECNY") << endl;
+        }
+    }
+}
+
+void usun(string *tabNazwisk, bool *tabObecnosc, string *tabIndeks, string nazwisko) {
+    for(int i = 0; i < MAX; i++) {
+        if(tabNazwisk[i] == nazwisko) {
+            for(int j = i; j < MAX - 1; j++) {
+                tabNazwisk[j] = tabNazwisk[j + 1];
+                tabObecnosc[j] = tabObecnosc[j + 1];
+                tabIndeks[j] = tabIndeks[j + 1];
+            }
+            tabNazwisk[MAX - 1] = "";
+
+
+            tabObecnosc[MAX - 1] = false;
+
+
+
+            tabIndeks[MAX - 1] = "---";
+
+
+
+            cout << "Usunieto studenta." << endl;
+            return;
+        }
+    }
+    cout << "Nie znaleziono studenta." << endl;
+}
+
+void dodajIndeks(string *tabNazwisk, string *tabIndeks, string nazwisko, string indeks) {
+    for(int i = 0; i < MAX; i++) {
+        if(tabNazwisk[i] == nazwisko) {
+            tabIndeks[i] = indeks;
+            cout << "Nadano indeks." << endl;
+            return;
+        }
+    }
+    cout << "Nie znaleziono studenta." << endl;
+}
+
+string Edytuj(string *tabNazwisk, string *tabIndeks, string edycja, string nowe) {
+    
+     for(int i = 0; i < MAX; i++) {
+        if(tabNazwisk[i] == edycja) {
+            tabNazwisk[i] = nowe;
+            cout << "zmieniono nazwisko na ."<<tabNazwisk[i]<<endl; ;
+            
+        }else if(tabIndeks[i] == edycja) {
+            tabIndeks[i] == nowe;
+            cout << "zmieniono indeks  na ."<<tabIndeks[i]<<endl; ;
+            
+        }
+    
+}return "Blad: nie ma takiego studenta";}
+    
+    
+
+
+int main() {
+    bool tabObecnosc[MAX];
+    string tabNazwisk[MAX];
+    string tabIndeks[MAX];
+    string edycja;
+    string nowe;
+    
+    
+    string nazwisko, indeks;
+    int temp = 0;
+
+    for (int i = 0; i < MAX; i++) {
+        tabNazwisk[i] = "";
+        tabObecnosc[i] = false;
+        tabIndeks[i] = "---";
+    }
+    do {
+        cout << "\n1-Dodaj, 2-Obecnosc, 3-Pokaz, 4-Usun, 5-Indeks, 6-Edycja pola  ,7-Wyjscie\nWybor: ";
+        cin >> temp;
+
+        switch(temp) {
+            case 1:
+                cout << "Nazwisko: ";
+                cin >> nazwisko;
+                cout << dodajOsobe(tabNazwisk, tabObecnosc, tabIndeks, nazwisko) << endl;
+                break;
+            case 2:
+                cout << "Nazwisko: ";
+                cin >> nazwisko;
+                if(!dodajObecnosc(tabNazwisk, tabObecnosc, nazwisko)) cout << "Nie znaleziono!";
+                break;
+            case 3:
+                Pokaz(tabNazwisk, tabObecnosc, tabIndeks);
+                break;
+            case 4:
+                cout << "Kogo usunac?: ";
+                cin >> nazwisko;
+                usun(tabNazwisk, tabObecnosc, tabIndeks, nazwisko);
+                break;
+            case 5:
+                cout << "Nazwisko: "; cin >> nazwisko;
+                cout << "Indeks: "; cin >> indeks;
+                dodajIndeks(tabNazwisk, tabIndeks, nazwisko, indeks);
+                break;
+            case 6:
+                cout << "Podaj co chcialbys zmienic podaj Nazwisko badz Indeks"<<endl;
+                cin>>edycja;
+                cout << "Podaj na co chcialbys zmienic nowe Nazwisko badz Indeks"<<endl;
+                cin>>nowe;
+                Edytuj(tabNazwisk, tabIndeks, edycja, nowe);
+                break;
+
+                
+            case 7:
+                return 0;
+            default:
+                cout << "Bledna opcja!";
+        }
+    } while(temp != 7);
+
+    return 0;
+}
