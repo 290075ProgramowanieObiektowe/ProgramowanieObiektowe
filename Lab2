@@ -1,0 +1,121 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+const int m = 10; 
+
+class Student {  
+private:
+    string imie;
+    string nazwisko;
+    int indeks;
+
+public:
+    Student(string im = "", string nzw = "", int id = 0) : imie(im), nazwisko(nzw), indeks(id) {}
+
+    void setIndeks(int nowy_id) { indeks = nowy_id; }
+    void setImie(string noweImie) { imie = noweImie; }
+    void setNazw(string nowe_nazwisko) { nazwisko = nowe_nazwisko; }
+
+    string getNazw() { return nazwisko; }
+    int getIndeks() { return indeks; }
+    string getImie() { return imie; } 
+};
+
+int puste(Student *tabStudent) {
+    for(int i = 0; i < m; i++) {
+        if(tabStudent[i].getNazw().empty()) return i; 
+    }
+    return -1; 
+}
+
+int znajdzPoNazwisku(Student *tabStudent, string nazwisko) {
+    for(int i = 0; i < m; i++) {
+        if(tabStudent[i].getNazw() == nazwisko) return i; 
+    }
+    return -1;
+}
+
+int znajdzPustyWsk(Student **Lista) {
+    for(int i = 0; i < m; i++) {
+        if(Lista[i] == nullptr) return i;
+    }
+    return -1;
+}
+
+void dodajOsobe(Student *tabStudent, Student nowa) {
+    int i = puste(tabStudent); 
+    if(i != -1) {
+        tabStudent[i] = nowa; 
+    }
+}
+
+void usunStudenta(Student *tabStudent, int nrIndeksu) {
+    int znalezionyIndeks = -1;
+    for (int i = 0; i < m; i++) {
+        if (tabStudent[i].getIndeks() == nrIndeksu) {
+            znalezionyIndeks = i;
+            break;
+        }
+    }
+    if (znalezionyIndeks != -1) {
+        for (int j = znalezionyIndeks; j < m - 1; j++) {
+            tabStudent[j] = tabStudent[j + 1]; 
+        }
+        tabStudent[m - 1] = Student(); 
+    }
+}
+
+void ustawObecnosc(Student *tabStudent, Student **ListaOsob, bool *tabObecnosc, bool obecnosc, string nazwisko) {
+    int i = znajdzPoNazwisku(tabStudent, nazwisko);
+    int j = znajdzPustyWsk(ListaOsob);
+
+    if (i != -1 && j != -1) {
+        ListaOsob[j] = &tabStudent[i]; 
+        tabObecnosc[j] = obecnosc;
+    }
+}
+
+void pokazListe(Student **ListaOsob, bool *tabObecnosc) {
+    cout << "Imie\t\tNazwisko\tIndeks\tObecnosc" << endl;
+    for(int i = 0; i < m; i++) { 
+        if(ListaOsob[i] != nullptr) {
+            cout << ListaOsob[i]->getImie() << "\t\t" 
+                 << ListaOsob[i]->getNazw() << "\t" 
+                 << ListaOsob[i]->getIndeks() << "\t" 
+                 << (tabObecnosc[i] ? "TAK" : "NIE") << endl;
+        }
+    }
+}
+
+int main() {
+    Student tabStudent[m];
+    Student *listaOsob1[m] = {nullptr}; 
+    bool tabObecnosc1[m] = {false}; 
+
+    Student *listaOsob2[m] = {nullptr}; 
+    bool tabObecnosc2[m] = {false}; 
+
+    dodajOsobe(tabStudent, Student("Jan", "Kowalski", 121));
+    dodajOsobe(tabStudent, Student("Anna", "Nowak", 152));
+    dodajOsobe(tabStudent, Student("Anna", "Kodak", 112));
+    
+    ustawObecnosc(tabStudent, listaOsob1, tabObecnosc1, true, "Kowalski");
+    ustawObecnosc(tabStudent, listaOsob1, tabObecnosc1, true, "Nowak");
+    ustawObecnosc(tabStudent, listaOsob1, tabObecnosc1, true, "Kodak");
+    pokazListe(listaOsob1, tabObecnosc1);
+
+
+
+    cout<<endl;
+
+    ustawObecnosc(tabStudent, listaOsob2, tabObecnosc2, false, "Kowalski");
+    ustawObecnosc(tabStudent, listaOsob2, tabObecnosc2, false, "Nowak");
+    ustawObecnosc(tabStudent, listaOsob2, tabObecnosc2, false, "Kodak");
+    
+    pokazListe(listaOsob2, tabObecnosc2);
+
+
+    return 0;
+}
