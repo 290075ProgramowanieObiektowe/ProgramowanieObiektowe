@@ -3,8 +3,6 @@
 
 using namespace std;
 
-
-// klasa bazowa, trzyma podstawowe dane o osobie
 class Osoba {
 protected:
     int nr_indeksu;
@@ -25,14 +23,12 @@ public:
     string getImie()     { return imie; }
     string getNazwisko() { return nazwisko; }
 
-    // wirtualna bo kazda klasa pochodna wypisuje troche inne rzeczy
     virtual void drukujInfo() {
         cout << "nr indeksu: " << nr_indeksu
              << "  imie: "     << imie
              << "  nazwisko: " << nazwisko;
     }
 
-    // zwraca typ jako string, przydaje sie przy wyswietlaniu listy
     virtual string typOsoby() {
         return "Osoba";
     }
@@ -40,8 +36,6 @@ public:
     bool pusty() { return nazwisko.empty(); }
 };
 
-
-// student dziedziczy po osobie, dodaje kierunek i rok
 class Student : public Osoba {
 protected:
     string kierunek;
@@ -71,15 +65,13 @@ public:
 };
 
 
-// student zaoczny to prawie to samo co student, rozni sie tylko trybem
 class StudentZaoczny : public Student {
 public:
     StudentZaoczny(int inx = 0, string im = "", string naz = "",
                    string kier = "", int rok = 0)
         : Student(inx, im, naz, kier, rok) {}
 
-    // dopisujemy tylko info o trybie zaocznym
-    virtual void drukujInfo() override {
+virtual void drukujInfo() override {
         Student::drukujInfo();
         cout << "  tryb: zaoczny";
     }
@@ -90,7 +82,6 @@ public:
 };
 
 
-// lista obecnosci trzyma wskazniki na Osoba wiec dziala polimorfizm
 class ListaObecnosci {
 private:
     static const int MAKS = 10;
